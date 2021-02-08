@@ -1,13 +1,18 @@
-import React from 'react';
-import Playground from './Playground';
+import React, {useState} from 'react';
+import {TodoList} from './Todos';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [todos, setTodos] = useState(
+      [
+          {id: '0', name: 'Buy a milk', isDone: false},
+          {id: '1', name: 'Read a book', isDone: false}
+        ]
+  )
+
   return (
       <div className="App">
-        <header className="App-header">
-          <Playground/>
-        </header>
+        <TodoList todos={todos}/>
       </div>
   );
 }
