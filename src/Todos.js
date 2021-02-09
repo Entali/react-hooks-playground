@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-const Todos = ({todos}) => {
+const Todos = ({todos, setTodos}) => {
   return (
       <div style={{
         width: '250px',
@@ -8,13 +8,33 @@ const Todos = ({todos}) => {
         display: 'flex',
         flexDirection: 'column'
       }}>
-        <TodoInput/>
+        <TodoInput
+            setTodos={setTodos}
+            todosLength={todos.length}
+        />
         <TodoList todos={todos}/>
       </div>
   )
 }
 
-const TodoInput = () => {
+
+const TodoInput = ({setTodos, todosLength}) => {
+  const [newTodo, setNewTodo] = useState({
+    id: todosLength,
+    name: null,
+    isDone: false
+  });
+
+  const onChange = (e) => {
+    setNewTodo(newTodo => ({ ...newTodo, name: e.target.value }))
+  };
+
+  const onKeyPress = (e) => {
+    if (e.which === 13 || e.keyCode === 13) {
+      setTodos(todos => [...todos, newTodo]);
+    }
+  }
+
   return (
       <input
           style={{
@@ -24,6 +44,8 @@ const TodoInput = () => {
             padding: '5px 10px'
           }}
           type="text"
+          onChange={onChange}
+          onKeyPress={onKeyPress}
       />
   )
 }
