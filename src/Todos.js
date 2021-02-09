@@ -5,15 +5,21 @@ const Todos = () => {
   const [todos, setTodos] = useState([]);
 
   const onCreate = (name) => {
-    return setTodos(todos => [...todos, {
+    console.log('onCreate')
+    return setTodos(prevTodos => [...prevTodos, {
       id: todos.length,
       name,
       isDone: false
     }]);
   };
 
-  const onChangeIsDone = (id) => {}
-  // const onDelete = (id) => {}
+  const onDelete = (id) => () => {
+    return setTodos(
+        prevTodos => prevTodos.filter(todo => todo.id !== id)
+    );
+  }
+
+  // const onChangeIsDone = (id) => {}
 
   return (
       <div style={{
@@ -23,12 +29,12 @@ const Todos = () => {
         flexDirection: 'column'
       }}>
         <CreateInput onPress={onCreate}/>
-        <TodoList todos={todos} onChangeIsDone={onChangeIsDone}/>
+        <TodoList todos={todos} onDelete={onDelete}/>
       </div>
   )
 }
 
-const TodoList = ({todos, onChangeIsDone}) => {
+const TodoList = ({todos, onDelete}) => {
   return (
       <ul style={{
         padding: '0',
@@ -38,27 +44,38 @@ const TodoList = ({todos, onChangeIsDone}) => {
         {todos.map(todo =>
             <TodoItem
                 key={`${todo.id}-${todo.name}`} {...todo}
-                onChangeIsDone={onChangeIsDone}
+                onDelete={onDelete}
             />)}
       </ul>
   );
 };
 
-const TodoItem = ({id, name, isDone, onChangeIsDone}) => {
-  const onChange = (id) => onChangeIsDone(id);
+const TodoItem = ({id, name, isDone, onDelete}) => {
 
   return (
-      <li>
+      <li style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '3px'
+      }}>
         <label>
           <span>
           <input
               type="checkbox"
               checked={isDone}
-              onChange={onChange(id)}
+              onChange={() => null}
           />
         </span>
           <span>{name}</span>
         </label>
+        <span style={{
+          cursor: 'pointer',
+          fontWeight: 'bold'
+        }}
+              onClick={onDelete(id)}
+        >
+          x
+        </span>
       </li>
   )
 };
