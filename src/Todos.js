@@ -19,19 +19,19 @@ const Todos = ({todos, setTodos}) => {
 
 
 const TodoInput = ({setTodos, todosLength}) => {
-  const [newTodo, setNewTodo] = useState({
-    id: todosLength,
-    name: null,
-    isDone: false
-  });
+  const [name, setName] = useState('');
 
-  const onChange = (e) => {
-    setNewTodo(newTodo => ({ ...newTodo, name: e.target.value }))
-  };
+  const onChange = (e) => setName(e.target.value);
 
   const onKeyPress = (e) => {
+    if (!name) return;
     if (e.which === 13 || e.keyCode === 13) {
-      setTodos(todos => [...todos, newTodo]);
+      setTodos(todos => [...todos, {
+        id: todosLength,
+        name,
+        isDone: false
+      }]);
+      setName('');
     }
   }
 
@@ -44,6 +44,7 @@ const TodoInput = ({setTodos, todosLength}) => {
             padding: '5px 10px'
           }}
           type="text"
+          value={name}
           onChange={onChange}
           onKeyPress={onKeyPress}
       />
