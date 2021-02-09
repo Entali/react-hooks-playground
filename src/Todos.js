@@ -21,22 +21,21 @@ const Todos = () => {
         display: 'flex',
         flexDirection: 'column'
       }}>
-        <TodoInput onCreate={onCreate}/>
+        <CreateInput onPress={onCreate}/>
         <TodoList todos={todos} onChangeIsDone={onChangeIsDone}/>
       </div>
   )
 }
 
 
-const TodoInput = ({onCreate}) => {
+const CreateInput = ({onPress}) => {
   const [name, setName] = useState('');
-
   const onChange = (e) => setName(e.target.value);
 
   const onKeyPress = (e) => {
     if (!name) return;
     if (e.which === 13 || e.keyCode === 13) {
-      onCreate(name);
+      onPress(name);
       setName('');
     }
     return name;
