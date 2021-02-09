@@ -3,12 +3,7 @@ import Todos from './Todos';
 import './App.css';
 
 const App = () => {
-  const [todos, setTodos] = useState(
-      [
-          {id: 0, name: 'Buy a milk', isDone: false},
-          {id: 1, name: 'Read a book', isDone: false}
-        ]
-  )
+  const [todos, setTodos] = useState([]);
 
   return (
       <div className="App">
