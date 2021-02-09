@@ -1,14 +1,12 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Todos from './Todos';
 import './App.css';
 
 const App = () => {
-  const [todos, setTodos] = useState([]);
-
   return (
-      <div className="App">
-        <Todos todos={todos} setTodos={setTodos}/>
-      </div>
+      <section className="App">
+        <Todos/>
+      </section>
   );
 }
 

@@ -1,6 +1,19 @@
 import React, {useState} from 'react';
 
-const Todos = ({todos, setTodos}) => {
+const Todos = () => {
+  const [todos, setTodos] = useState([]);
+
+  const onCreate = (name) => {
+    return setTodos(todos => [...todos, {
+      id: todos.length,
+      name,
+      isDone: false
+    }]);
+  };
+
+  const onChangeIsDone = (id) => {}
+  // const onDelete = (id) => {}
+
   return (
       <div style={{
         width: '250px',
@@ -8,17 +21,14 @@ const Todos = ({todos, setTodos}) => {
         display: 'flex',
         flexDirection: 'column'
       }}>
-        <TodoInput
-            setTodos={setTodos}
-            todosLength={todos.length}
-        />
-        <TodoList todos={todos}/>
+        <TodoInput onCreate={onCreate}/>
+        <TodoList todos={todos} onChangeIsDone={onChangeIsDone}/>
       </div>
   )
 }
 
 
-const TodoInput = ({setTodos, todosLength}) => {
+const TodoInput = ({onCreate}) => {
   const [name, setName] = useState('');
 
   const onChange = (e) => setName(e.target.value);
@@ -26,13 +36,10 @@ const TodoInput = ({setTodos, todosLength}) => {
   const onKeyPress = (e) => {
     if (!name) return;
     if (e.which === 13 || e.keyCode === 13) {
-      setTodos(todos => [...todos, {
-        id: todosLength,
-        name,
-        isDone: false
-      }]);
+      onCreate(name);
       setName('');
     }
+    return name;
   }
 
   return (
@@ -51,20 +58,25 @@ const TodoInput = ({setTodos, todosLength}) => {
   )
 }
 
-const TodoList = ({todos}) => {
+const TodoList = ({todos, onChangeIsDone}) => {
   return (
       <ul style={{
         padding: '0',
         textAlign: 'left',
         listStyle: 'none'
       }}>
-        {todos.map(todo => <TodoItem
-            key={`${todo.id}-${todo.name}`} {...todo}/>)}
+        {todos.map(todo =>
+            <TodoItem
+                key={`${todo.id}-${todo.name}`} {...todo}
+                onChangeIsDone={onChangeIsDone}
+            />)}
       </ul>
   );
 };
 
-const TodoItem = ({name, isDone}) => {
+const TodoItem = ({id, name, isDone, onChangeIsDone}) => {
+  const onChange = (id) => onChangeIsDone(id);
+
   return (
       <li>
         <label>
@@ -72,6 +84,7 @@ const TodoItem = ({name, isDone}) => {
           <input
               type="checkbox"
               checked={isDone}
+              onChange={onChange(id)}
           />
         </span>
           <span>{name}</span>
