@@ -67,17 +67,24 @@ const TodoItem = (props) => {
       <li style={{
         display: 'flex',
         justifyContent: 'space-between',
+        alignItems: 'center',
         padding: '3px'
       }}>
         <label>
           <span>
-          <input
-              type="checkbox"
-              checked={isDone}
-              onChange={onChangeIsDone(id)}
-          />
-        </span>
-          <span>{name}</span>
+            <input
+                type="checkbox"
+                checked={isDone}
+                onChange={onChangeIsDone(id)}
+            />
+          </span>
+          <span style={{
+            display: 'inline-flex',
+            marginLeft: '5px',
+            textDecoration: isDone && 'line-through'
+          }}>
+            {name}
+          </span>
         </label>
         <span style={{
           cursor: 'pointer',
