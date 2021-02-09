@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import CreateInput from './CreateInput';
 
 const Todos = () => {
   const [todos, setTodos] = useState([]);
@@ -24,36 +25,6 @@ const Todos = () => {
         <CreateInput onPress={onCreate}/>
         <TodoList todos={todos} onChangeIsDone={onChangeIsDone}/>
       </div>
-  )
-}
-
-
-const CreateInput = ({onPress}) => {
-  const [name, setName] = useState('');
-  const onChange = (e) => setName(e.target.value);
-
-  const onKeyPress = (e) => {
-    if (!name) return;
-    if (e.which === 13 || e.keyCode === 13) {
-      onPress(name);
-      setName('');
-    }
-    return name;
-  }
-
-  return (
-      <input
-          style={{
-            height: '40px',
-            boxSizing: 'border-box',
-            margin: '4px',
-            padding: '5px 10px'
-          }}
-          type="text"
-          value={name}
-          onChange={onChange}
-          onKeyPress={onKeyPress}
-      />
   )
 }
 
