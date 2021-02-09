@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {TodoList} from './Todos';
+import Todos from './Todos';
 import './App.css';
 
 const App = () => {
@@ -12,7 +12,7 @@ const App = () => {
 
   return (
       <div className="App">
-        <TodoList todos={todos}/>
+        <Todos todos={todos}/>
       </div>
   );
 }
