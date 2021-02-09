@@ -5,9 +5,8 @@ const Todos = () => {
   const [todos, setTodos] = useState([]);
 
   const onCreate = (name) => {
-    console.log('onCreate')
     return setTodos(prevTodos => [...prevTodos, {
-      id: todos.length,
+      id: Date.now(),
       name,
       isDone: false
     }]);
@@ -19,7 +18,12 @@ const Todos = () => {
     );
   }
 
-  // const onChangeIsDone = (id) => {}
+  const onChangeIsDone = (id) => () => {
+    return setTodos(prevTodos => prevTodos.map(todo => todo.id === id ? {
+      ...todo,
+      isDone: !todo.isDone
+    } : todo));
+  };
 
   return (
       <div style={{
@@ -29,12 +33,17 @@ const Todos = () => {
         flexDirection: 'column'
       }}>
         <CreateInput onPress={onCreate}/>
-        <TodoList todos={todos} onDelete={onDelete}/>
+        <TodoList
+            todos={todos}
+            onDelete={onDelete}
+            onChangeIsDone={onChangeIsDone}
+        />
       </div>
   )
 }
 
-const TodoList = ({todos, onDelete}) => {
+const TodoList = (props) => {
+  const {todos, onDelete, onChangeIsDone} = props;
   return (
       <ul style={{
         padding: '0',
@@ -43,15 +52,17 @@ const TodoList = ({todos, onDelete}) => {
       }}>
         {todos.map(todo =>
             <TodoItem
-                key={`${todo.id}-${todo.name}`} {...todo}
+                {...todo}
+                key={todo.id}
                 onDelete={onDelete}
+                onChangeIsDone={onChangeIsDone}
             />)}
       </ul>
   );
 };
 
-const TodoItem = ({id, name, isDone, onDelete}) => {
-
+const TodoItem = (props) => {
+  const {id, name, isDone, onDelete, onChangeIsDone} = props;
   return (
       <li style={{
         display: 'flex',
@@ -63,7 +74,7 @@ const TodoItem = ({id, name, isDone, onDelete}) => {
           <input
               type="checkbox"
               checked={isDone}
-              onChange={() => null}
+              onChange={onChangeIsDone(id)}
           />
         </span>
           <span>{name}</span>
@@ -71,9 +82,7 @@ const TodoItem = ({id, name, isDone, onDelete}) => {
         <span style={{
           cursor: 'pointer',
           fontWeight: 'bold'
-        }}
-              onClick={onDelete(id)}
-        >
+        }} onClick={onDelete(id)}>
           x
         </span>
       </li>

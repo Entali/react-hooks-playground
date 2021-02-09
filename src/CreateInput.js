@@ -7,7 +7,8 @@ const style = {
   padding: '5px 10px'
 };
 
-const CreateInput = ({onPress}) => {
+const CreateInput = (props) => {
+  const {onPress} = props;
   const [name, setName] = useState('');
   const onChange = (e) => setName(e.target.value);
 
