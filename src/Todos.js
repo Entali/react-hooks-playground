@@ -1,8 +1,20 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import CreateInput from './CreateInput';
 
 const Todos = () => {
-  const [todos, setTodos] = useState([]);
+  const initialTodos =
+      JSON.parse(window.localStorage.getItem("todos") || "[]");
+
+  const [todos, setTodos] = useState(initialTodos);
+
+  useEffect(() => {
+    if (todos) {
+      window.localStorage.setItem(
+          "todos",
+          JSON.stringify(todos)
+      )
+    }
+  }, [todos]);
 
   const onCreate = (name) => {
     return setTodos(prevTodos => [...prevTodos, {
