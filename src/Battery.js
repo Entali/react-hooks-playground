@@ -24,7 +24,7 @@ const Battery = () => {
       battery.removeEventListener('chargingchange', onChange);
     }
   }, []);
-
+  console.log('battery', battery);
   return (
       <div>
         Battery
