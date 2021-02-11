@@ -2,9 +2,13 @@ import React, {useState, useEffect} from 'react';
 import CreateInput from './CreateInput';
 
 const Todos = () => {
-  const initialTodos =
-      JSON.parse(window.localStorage.getItem("todos") || "[]");
-
+  // useState также принимает функции
+  // здесь используется функция чтобы прочитать из localStorage
+  // только один раз, а не перед каждым рендером
+  const initialTodos = () =>
+      JSON.parse(
+          window.localStorage.getItem("todos") || "[]"
+      );
   const [todos, setTodos] = useState(initialTodos);
 
   useEffect(() => {
