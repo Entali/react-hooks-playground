@@ -20,6 +20,14 @@ const Todos = () => {
     }
   }, [todos]);
 
+  useEffect(() => {
+    const notDoneTodos = todos.reduce((memo, todo) => {
+      return !todo.isDone ? memo + 1 : memo
+    }, 0);
+
+    document.title = notDoneTodos ? `Todos - ${notDoneTodos}` : 'Todos - 0';
+  });
+
   const onCreate = (name) => {
     return setTodos(prevTodos => [...prevTodos, {
       id: Date.now(),
