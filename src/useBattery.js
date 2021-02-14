@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import {useState, useEffect} from 'react';
 
-const Battery = () => {
+const useBattery = () => {
   const [battery, setBattery] = useState({
     level: 0,
     charging: false
@@ -24,12 +24,8 @@ const Battery = () => {
       battery.removeEventListener('chargingchange', onChange);
     }
   }, []);
-  console.log('battery', battery);
-  return (
-      <div>
-        Battery
-      </div>
-  );
+
+  return battery;
 };
 
-export default Battery;
+export default useBattery;
