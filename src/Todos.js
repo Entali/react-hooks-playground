@@ -1,14 +1,23 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import CreateInput from './CreateInput';
 
 const Todos = () => {
+  const todoId = useRef(0);
   // useState также принимает функции
   // здесь используется функция чтобы прочитать из localStorage
   // только один раз, а не перед каждым рендером
-  const initialTodos = () =>
-      JSON.parse(
-          window.localStorage.getItem("todos") || "[]"
-      );
+  const initialTodos = () => {
+    const valueFromStorage = JSON.parse(
+        window.localStorage.getItem("todos") || "[]"
+    );
+
+    todoId.current = valueFromStorage.reduce((memo, todo) => {
+      return Math.max(memo, todo.id);
+    }, 0);
+
+    return valueFromStorage;
+  }
+
   const [todos, setTodos] = useState(initialTodos);
 
   useEffect(() => {
@@ -29,8 +38,9 @@ const Todos = () => {
   });
 
   const onCreate = (name) => {
+    todoId.current += 1;
     return setTodos(prevTodos => [...prevTodos, {
-      id: Date.now(),
+      id: todoId.current,
       name,
       isDone: false
     }]);
