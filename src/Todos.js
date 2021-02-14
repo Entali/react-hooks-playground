@@ -23,7 +23,13 @@ const useLocalStorage = (key, defaultValue, callback) => {
   }, [key, storage]);
 
   return [storage, setStorage];
-}
+};
+
+const useDocumentTitle = (title) => {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+};
 
 const Todos = () => {
   const todoId = useRef(0);
@@ -38,13 +44,12 @@ const Todos = () => {
       }
   );
 
-  useEffect(() => {
-    const notDoneTodos = todos.reduce((memo, todo) => {
-      return !todo.isDone ? memo + 1 : memo
-    }, 0);
+  const notDoneTodos = todos.reduce((memo, todo) => {
+    return !todo.isDone ? memo + 1 : memo
+  }, 0);
 
-    document.title = notDoneTodos ? `Todos - ${notDoneTodos}` : 'Todos - 0';
-  });
+  const title = notDoneTodos ? `Todos - ${notDoneTodos}` : 'Todos - 0';
+  useDocumentTitle(title);
 
   const onCreate = (name) => {
     todoId.current += 1;
