@@ -12,7 +12,7 @@ const CreateInput = (props) => {
   const [name, setName] = useState('');
   const onChange = (e) => setName(e.target.value);
 
-  const onKeyPress = (e) => {
+  const onKeyPress = (name) => (e) => {
     if (!name) return;
     if (e.which === 13 || e.keyCode === 13) {
       onPress(name);
@@ -27,7 +27,7 @@ const CreateInput = (props) => {
           style={style}
           value={name}
           onChange={onChange}
-          onKeyPress={onKeyPress}
+          onKeyPress={onKeyPress(name)}
       />
   )
 };
