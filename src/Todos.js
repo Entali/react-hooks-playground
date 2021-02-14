@@ -1,33 +1,42 @@
 import React, {useState, useEffect, useRef} from 'react';
 import CreateInput from './CreateInput';
 
-const Todos = () => {
-  const todoId = useRef(0);
+const useLocalStorage = (key, defaultValue, callback) => {
   // useState также принимает функции
   // здесь используется функция чтобы прочитать из localStorage
   // только один раз, а не перед каждым рендером
-  const initialTodos = () => {
+
+  const initialValue = () => {
     const valueFromStorage = JSON.parse(
-        window.localStorage.getItem("todos") || "[]"
+        window.localStorage.getItem(key) || JSON.stringify(defaultValue)
     );
-
-    todoId.current = valueFromStorage.reduce((memo, todo) => {
-      return Math.max(memo, todo.id);
-    }, 0);
-
+    if (callback) {
+      callback(valueFromStorage);
+    }
     return valueFromStorage;
   }
 
-  const [todos, setTodos] = useState(initialTodos);
+  const [storage, setStorage] = useState(initialValue);
 
   useEffect(() => {
-    if (todos) {
-      window.localStorage.setItem(
-          "todos",
-          JSON.stringify(todos)
-      )
-    }
-  }, [todos]);
+    window.localStorage.setItem(key, JSON.stringify(storage));
+  }, [key, storage]);
+
+  return [storage, setStorage];
+}
+
+const Todos = () => {
+  const todoId = useRef(0);
+  const [todos, setTodos] = useLocalStorage(
+      "todos",
+      [],
+      values => {
+        todoId.current = values.reduce(
+            (memo, todo) => Math.max(memo, todo.id),
+            0
+        )
+      }
+  );
 
   useEffect(() => {
     const notDoneTodos = todos.reduce((memo, todo) => {
