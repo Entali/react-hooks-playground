@@ -1,36 +1,7 @@
-import React, {useState, useEffect, useRef} from 'react';
-import CreateInput from './CreateInput';
+import React, {useRef} from 'react';
+import CreateInput from '../components/CreateInput';
 import {useTitle} from 'react-use';
-
-const useLocalStorage = (key, defaultValue, callback) => {
-  // useState также принимает функции
-  // здесь используется функция чтобы прочитать из localStorage
-  // только один раз, а не перед каждым рендером
-
-  const initialValue = () => {
-    const valueFromStorage = JSON.parse(
-        window.localStorage.getItem(key) || JSON.stringify(defaultValue)
-    );
-    if (callback) {
-      callback(valueFromStorage);
-    }
-    return valueFromStorage;
-  }
-
-  const [storage, setStorage] = useState(initialValue);
-
-  useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(storage));
-  }, [key, storage]);
-
-  return [storage, setStorage];
-};
-
-const useDocumentTitle = (title) => {
-  useEffect(() => {
-    document.title = title;
-  }, [title]);
-};
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const Todos = () => {
   const todoId = useRef(0);
