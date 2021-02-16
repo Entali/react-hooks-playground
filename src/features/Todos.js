@@ -3,24 +3,22 @@ import CreateInput from '../components/CreateInput';
 import {useTitle} from 'react-use';
 import useLocalStorage from '../hooks/useLocalStorage';
 
+const notDoneTodos = todos => todos.reduce((memo, todo) =>
+    (!todo.isDone ? memo + 1 : memo), 0);
+
+const createId = (values, id) => id.current = values.reduce((memo, item) =>
+    Math.max(memo, item.id), 0);
+
 const Todos = () => {
   const todoId = useRef(0);
   const [todos, setTodos] = useLocalStorage(
       "todos",
       [],
-      values => {
-        todoId.current = values.reduce(
-            (memo, todo) => Math.max(memo, todo.id),
-            0
-        )
-      }
+      todos => createId(todos, todoId)
   );
 
-  const notDoneTodos = todos.reduce((memo, todo) => {
-    return !todo.isDone ? memo + 1 : memo
-  }, 0);
-
-  const title = notDoneTodos ? `Todos - ${notDoneTodos}` : 'Todos - 0';
+  const notDoneCount = notDoneTodos(todos);
+  const title = notDoneCount ? `Todos - ${notDoneCount}` : 'Todos - 0';
   useTitle(title);
 
   const onCreate = (name) => {
