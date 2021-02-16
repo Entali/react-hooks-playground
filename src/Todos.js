@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import CreateInput from './CreateInput';
+import {useTitle} from 'react-use';
 
 const useLocalStorage = (key, defaultValue, callback) => {
   // useState также принимает функции
@@ -49,7 +50,7 @@ const Todos = () => {
   }, 0);
 
   const title = notDoneTodos ? `Todos - ${notDoneTodos}` : 'Todos - 0';
-  useDocumentTitle(title);
+  useTitle(title);
 
   const onCreate = (name) => {
     todoId.current += 1;
