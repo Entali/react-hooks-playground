@@ -14,7 +14,8 @@ const CreateInput = (props) => {
 
   const onKeyPress = (name) => (e) => {
     if (!name) return;
-    if (e.which === 13 || e.keyCode === 13) {
+    const {which, keyCode} = e;
+    if (which === 13 || keyCode === 13) {
       onPress(name);
       setName('');
     }

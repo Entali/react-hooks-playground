@@ -1,46 +1,56 @@
-import React, {useRef} from 'react';
+import React, {useRef, useReducer} from 'react';
 import CreateInput from '../components/CreateInput';
 import {useTitle} from 'react-use';
-import useLocalStorage from '../hooks/useLocalStorage';
 
 const notDoneTodos = todos => todos.reduce((memo, todo) =>
     (!todo.isDone ? memo + 1 : memo), 0);
 
-const createId = (values, id) => id.current = values.reduce((memo, item) =>
-    Math.max(memo, item.id), 0);
-
 const Todos = () => {
   const todoId = useRef(0);
-  const [todos, setTodos] = useLocalStorage(
-      "todos",
-      [],
-      todos => createId(todos, todoId)
-  );
-
+  const [todos, dispatch] = useReducer((state, action) => {
+    switch (action.type) {
+      case 'ADD_TODO':
+        todoId.current += 1;
+        return [
+          ...state,
+          {
+            id: todoId.current,
+            name: action.name,
+            isDone: false
+          }
+        ];
+      case 'UPDATE_TODO':
+        return [
+          ...state,
+          state.map(todo =>
+              todo.id === action.id
+                  ? {...todo, isDone: !todo.isDone}
+                  : todo
+          )
+        ];
+      case 'DELETE_TODO':
+        return state.filter(todo => todo.id !== action.id);
+      default:
+        return state;
+    }
+  }, []);
+  console.log('todoId',todoId)
+  // Todos document title counter
   const notDoneCount = notDoneTodos(todos);
   const title = notDoneCount ? `Todos - ${notDoneCount}` : 'Todos - 0';
   useTitle(title);
 
+  // CRUD
   const onCreate = (name) => {
-    todoId.current += 1;
-    return setTodos(prevTodos => [...prevTodos, {
-      id: todoId.current,
-      name,
-      isDone: false
-    }]);
+    dispatch({type: 'ADD_TODO', name});
   };
 
   const onDelete = (id) => () => {
-    return setTodos(
-        prevTodos => prevTodos.filter(todo => todo.id !== id)
-    );
+    dispatch({type: 'DELETE_TODO', id});
   }
 
   const onChangeIsDone = (id) => () => {
-    return setTodos(prevTodos => prevTodos.map(todo => todo.id === id ? {
-      ...todo,
-      isDone: !todo.isDone
-    } : todo));
+    dispatch({type: 'UPDATE_TODO', id});
   };
 
   return (
